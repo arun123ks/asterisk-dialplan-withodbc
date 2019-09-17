@@ -1,0 +1,35 @@
+[aroontest]
+
+;exten => 444555666,1,Playback(audiofile1) ;
+exten => 444555666,1,Set(CONNID=${DDI_CALLERINFO(${CALLERID(num)})})
+exten => 444555666,n,GotoIf($["${CONNID}" = ""]?nomatch:match)
+exten => 444555666,n,Set(TIMEOUT(digit)=5);
+exten => 444555666,n,Set(TIMEOUT(response)=10);
+exten => 444555666,n,Read(langcod,audiofile1,1);
+exten => 444555666,n,GotoIf($["${langcod}" = "0"]?repaet);
+exten => 444555666,n,GotoIf($["${langcod}" = "2"]?lawyer);
+exten => 444555666,n,GotoIf($["${langcod}" = "4"]?term);
+exten => 444555666,n,Goto(invalidinput)
+exten => 444555666,n,Hangup()
+exten => 444555666,n(term),Read(langopt,audiofile2,1);
+exten => 444555666,n,GotoIf($["${langopt}" = "0"]?repaet);
+exten => 444555666,n,GotoIf($["${langopt}" = "2"]?lawyer);
+;exten => 444555666,n(lawyer),Set(CONNID=${DDI_CALLERINFO(${CALLERID(num)})})
+;exten => 444555666,n,GotoIf($["${CONNID}" = ""]?nomatch:match)
+;exten => 444555666,n,set(NEWCUST=${DDI_NEWCUST(${CALLERID(num)})})
+exten => 444555666,n(nomatch),Set(TIMEOUT(digit)=5);
+exten => 444555666,n,Set(TIMEOUT(response)=10);
+exten => 444555666,n,Read(langcod,audiofile1,1);
+exten => 444555666,n,GotoIf($["${langcod}" = "0"]?repaet);
+exten => 444555666,n,GotoIf($["${langcod}" = "2"]?lawyer);
+exten => 444555666,n,GotoIf($["${langcod}" = "4"]?term);
+exten => 444555666,n,Goto(invalidinput)
+exten => 444555666,n,Hangup()
+exten => 444555666,n,Set(CONNDEST1=${DDI_CONNDEST(1)});
+exten => 444555666,n,set(NEWCUST=${DDI_NEWCUST(${CALLERID(num)})})
+exten => 444555666,n,Goto(from-internal,${CONNDEST1},1)
+exten => 444555666,n(match),Set(CONNDEST=${DDI_CONNDEST(${CONNID})});
+exten => 444555666,n,GotoIf($["${CONNDEST}" != ""]?dialdest:nodest)
+exten => 444555666,n(dialdest),Goto(from-internal,${CONNDEST},1)
+exten => 444555666,n,Hangup()
+

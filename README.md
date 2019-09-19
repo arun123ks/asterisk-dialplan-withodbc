@@ -33,7 +33,7 @@ username=>ivrusr
 password=>ivrtestusr
 database=>ivrtest
 
-Note : change database name , username and password as per your configuration 
+Note : change database name , username and password as per your configuration  
 
 
 
